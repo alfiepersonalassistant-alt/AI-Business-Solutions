@@ -1,0 +1,87 @@
+{
+  "theme": "dark",
+  "archetype": "Archetype 4: Swiss & High-Contrast",
+  "design_philosophy": "A hyper-modern, professional, elite AI consulting landing page. High contrast, sharp edges mixed with subtle glowing elements. The chat interface is the focal point, acting as the primary discovery mechanism.",
+  "typography": {
+    "font_family": {
+      "headings": "'Outfit', sans-serif",
+      "body": "'Manrope', sans-serif"
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-light",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium",
+      "h3": "text-xl sm:text-2xl tracking-tight font-medium",
+      "body": "text-base leading-relaxed text-zinc-300",
+      "small": "text-sm tracking-wide text-zinc-500",
+      "overline": "text-xs uppercase tracking-[0.2em] font-bold text-zinc-400"
+    }
+  },
+  "colors": {
+    "background": "#050505",
+    "surface": "#111111",
+    "surface_glass": "rgba(255, 255, 255, 0.03)",
+    "border": "#222222",
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#A3A3A3",
+      "muted": "#71717A",
+      "inverse": "#000000"
+    },
+    "primary": "#FFFFFF",
+    "primary_hover": "#E4E4E7",
+    "accent_glow": "rgba(255, 255, 255, 0.15)"
+  },
+  "layout_and_spacing": {
+    "grid_system": "bento_grid",
+    "container_padding": "px-6 md:px-12 lg:px-24",
+    "section_spacing": "py-24 md:py-32",
+    "card_padding": "p-8",
+    "border_radius": "rounded-2xl"
+  },
+  "motion_and_interactions": {
+    "hover_states": "subtle lift (-translate-y-1) and increased border opacity",
+    "chat_reveal": "staggered fade-up for each chat message",
+    "background": "slow, continuous subtle movement using framer-motion or particle effects"
+  },
+  "surfaces_and_micro_themes": {
+    "chat_container": "Glassmorphism: bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(255,255,255,0.05)]",
+    "buttons": "Neumorphism mix: solid white background, black text, with a subtle white glow on hover",
+    "inputs": "Flat solid: bg-transparent border-b border-white/20 focus:border-white focus:outline-none transition-colors rounded-none"
+  },
+  "media": {
+    "images": [
+      {
+        "category": "hero_background",
+        "url": "https://static.prod-images.emergentagent.com/jobs/57b5de0e-fb00-4b4d-ae44-0ba86ad1db08/images/5d4e7480b056c7c1a153bc12feacf2d7d1f8f0bed532aeb1d5968ddf47b7ce72.png",
+        "description": "Abstract geometric dark tech background"
+      },
+      {
+        "category": "testimonial_portrait",
+        "url": "https://images.unsplash.com/photo-1758887261865-a2b89c0f7ac5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG93bmVyJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzc0NDgwNTQ3fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Smiling business owner"
+      },
+      {
+        "category": "testimonial_portrait",
+        "url": "https://images.unsplash.com/photo-1769636929132-e4e7b50cfac0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMG93bmVyJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzc0NDgwNTQ3fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Young woman in black sweatshirt"
+      }
+    ]
+  },
+  "components_strategy": {
+    "chat_interface": "Custom UI. Use framer-motion for message bubbles. Left side for AI, right side for user. Implement a fake typing indicator.",
+    "pricing_cards": "Bento grid mode. One dominant card, one secondary. Use 'Tracing Beam' border effect on the recommended tier.",
+    "forms": "Use Shadcn Input, Select, Button. Override default styles to match the dark high-contrast theme.",
+    "icons": "Use lucide-react with thin stroke widths (1.5) to match the Outfit font."
+  },
+  "instructions_to_main_agent": [
+    "Build a single-page React application using Tailwind CSS and Framer Motion.",
+    "The hero section MUST be an interactive AI chat simulation asking questions about the user's business and pain points, mimicking a 21st.dev style component.",
+    "Do NOT use 'Inter' for headings. Use 'Outfit'. Add 'Outfit' and 'Manrope' via Google Fonts.",
+    "Use dark mode exclusively. Background color is #050505.",
+    "Implement the animated background using either pure CSS animations, Framer Motion floating elements, or the provided background image with a slow pan/zoom effect.",
+    "Ensure the header nav has a backdrop blur and a 1px border on the bottom (border-white/10).",
+    "Include 'data-testid' on all interactive elements (e.g., chat inputs, send buttons).",
+    "Use Shadcn UI for standard form controls in the 'Contact' section of the chat.",
+    "Follow the 'Bento Grid' strategy for any feature showcases below the fold, avoiding standard bootstrap columns."
+  ]
+}
