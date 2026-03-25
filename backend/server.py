@@ -79,6 +79,12 @@ class LeadSubmission(BaseModel):
 # Chat endpoint
 @api_router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
+    # Validate inputs
+    if not request.session_id or not request.session_id.strip():
+        raise HTTPException(status_code=422, detail="session_id is required")
+    if not request.message or not request.message.strip():
+        raise HTTPException(status_code=422, detail="message is required")
+    
     try:
         # Initialize Gemini chat
         chat_client = LlmChat(
@@ -132,6 +138,14 @@ Show genuine interest in their challenges."""
 # Lead submission endpoint
 @api_router.post("/leads", response_model=Lead)
 async def submit_lead(submission: LeadSubmission):
+    # Validate inputs
+    if not submission.session_id or not submission.session_id.strip():
+        raise HTTPException(status_code=422, detail="session_id is required")
+    if not submission.name or not submission.name.strip():
+        raise HTTPException(status_code=422, detail="name is required")
+    if not submission.email or not submission.email.strip():
+        raise HTTPException(status_code=422, detail="email is required")
+    
     try:
         # Extract conversation context
         conversation_text = "\n".join([
