@@ -197,31 +197,75 @@ function App() {
           className={`fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl ${
             theme === 'dark' 
               ? 'border-white/10 bg-black/20' 
-              : 'border-gray-200 bg-white/20'
+              : 'border-gray-200 bg-white/80'
           }`}
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-purple-500/10 transition-all hover:scale-110"
-                data-testid="theme-toggle"
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
-                ) : (
-                  <Moon className="w-5 h-5 text-purple-600" strokeWidth={1.5} />
-                )}
-              </button>
-            </div>
+            {/* Logo - Left */}
             <div className="flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-purple-500" strokeWidth={1.5} />
               <h1 className={`text-xl font-light ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: "Outfit, sans-serif" }}>
                 AI Business Solutions
               </h1>
             </div>
-            <div className="w-14"></div>
+
+            {/* Navigation - Center (Hidden on mobile) */}
+            <nav className="hidden md:flex items-center gap-8">
+              <button 
+                onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`text-sm font-medium hover:text-purple-500 transition-colors ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                }`}
+              >
+                How It Works
+              </button>
+              <button 
+                onClick={() => document.getElementById('use-cases')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`text-sm font-medium hover:text-purple-500 transition-colors ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                }`}
+              >
+                Use Cases
+              </button>
+              <button 
+                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`text-sm font-medium hover:text-purple-500 transition-colors ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                }`}
+              >
+                Features
+              </button>
+              <button 
+                onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`text-sm font-medium hover:text-purple-500 transition-colors ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                }`}
+              >
+                FAQ
+              </button>
+              <button 
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`text-sm font-medium hover:text-purple-500 transition-colors ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                }`}
+              >
+                Contact
+              </button>
+            </nav>
+
+            {/* Theme Toggle - Right */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-purple-500/10 transition-all hover:scale-110"
+              data-testid="theme-toggle"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
+              ) : (
+                <Moon className="w-5 h-5 text-purple-600" strokeWidth={1.5} />
+              )}
+            </button>
           </div>
         </motion.header>
 
@@ -433,7 +477,7 @@ function App() {
         {/* Additional Sections - Always show */}
         <>
           {/* How It Works Section */}
-          <section className={`py-24 px-6 md:px-12 lg:px-24 border-t ${
+          <section id="how-it-works" className={`py-24 px-6 md:px-12 lg:px-24 border-t ${
             theme === 'dark' ? 'border-white/5' : 'border-gray-200'
           }`}>
               <div className="max-w-6xl mx-auto">
@@ -443,10 +487,12 @@ function App() {
                   viewport={{ once: true }}
                   className="text-center mb-16"
                 >
-                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <h3 className={`text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`} style={{ fontFamily: "Outfit, sans-serif" }}>
                     How It Works
                   </h3>
-                  <p className="text-zinc-400">Simple, efficient, and tailored to your needs</p>
+                  <p className={theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}>Simple, efficient, and tailored to your needs</p>
                 </motion.div>
 
                 <div className="grid md:grid-cols-3 gap-8">
@@ -461,12 +507,22 @@ function App() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.1 }}
-                      className="glass-container p-6 rounded-2xl hover:border-white/20 transition-all"
+                      className={`p-6 rounded-2xl hover:border-purple-500/20 transition-all ${
+                        theme === 'dark' 
+                          ? 'glass-container' 
+                          : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                      }`}
                       data-testid={`how-it-works-step-${idx}`}
                     >
-                      <div className="text-5xl font-light mb-4 text-white/20" style={{ fontFamily: "'Outfit', sans-serif" }}>{item.step}</div>
-                      <h4 className="text-xl font-medium mb-3">{item.title}</h4>
-                      <p className="text-zinc-400 text-sm">{item.desc}</p>
+                      <div className={`text-5xl font-light mb-4 ${
+                        theme === 'dark' ? 'text-white/20' : 'text-gray-200'
+                      }`} style={{ fontFamily: "Outfit, sans-serif" }}>{item.step}</div>
+                      <h4 className={`text-xl font-medium mb-3 ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>{item.title}</h4>
+                      <p className={`text-sm ${
+                        theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                      }`}>{item.desc}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -474,7 +530,9 @@ function App() {
             </section>
 
             {/* Use Cases Section */}
-            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+            <section id="use-cases" className={`py-24 px-6 md:px-12 lg:px-24 border-t ${
+              theme === 'dark' ? 'border-white/5' : 'border-gray-200'
+            }`}>
               <div className="max-w-6xl mx-auto">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -482,10 +540,12 @@ function App() {
                   viewport={{ once: true }}
                   className="text-center mb-16"
                 >
-                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <h3 className={`text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`} style={{ fontFamily: "Outfit, sans-serif" }}>
                     Popular Use Cases
                   </h3>
-                  <p className="text-zinc-400">See how businesses like yours benefit from AI automation</p>
+                  <p className={theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}>See how businesses like yours benefit from AI automation</p>
                 </motion.div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -495,12 +555,20 @@ function App() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    className={`p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all ${
+                      theme === 'dark' 
+                        ? 'glass-container' 
+                        : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                    }`}
                     data-testid="use-case-0"
                   >
                     <WorkflowAnimation StartIcon={Mail} EndIcon={Mail} />
-                    <h4 className="text-lg font-semibold mb-2">Email Automation</h4>
-                    <p className="text-zinc-400 text-sm">Auto-sort, prioritize, and respond to emails using AI agents</p>
+                    <h4 className={`text-lg font-semibold mb-2 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>Email Automation</h4>
+                    <p className={`text-sm ${
+                      theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'
+                    }`}>Auto-sort, prioritize, and respond to emails using AI agents</p>
                   </motion.div>
 
                   {/* Data Processing */}
@@ -510,12 +578,16 @@ function App() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.05 }}
                     whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    className={`p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all ${
+                      theme === 'dark' 
+                        ? 'glass-container' 
+                        : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                    }`}
                     data-testid="use-case-1"
                   >
                     <WorkflowAnimation StartIcon={Globe} EndIcon={Database} />
-                    <h4 className="text-lg font-semibold mb-2">Data Processing</h4>
-                    <p className="text-zinc-400 text-sm">Extract insights from reports and spreadsheets instantly</p>
+                    <h4 className={`text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Data Processing</h4>
+                    <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>Extract insights from reports and spreadsheets instantly</p>
                   </motion.div>
 
                   {/* Customer Support */}
@@ -525,12 +597,16 @@ function App() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.1 }}
                     whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    className={`p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all ${
+                      theme === 'dark' 
+                        ? 'glass-container' 
+                        : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                    }`}
                     data-testid="use-case-2"
                   >
                     <WorkflowAnimation StartIcon={MessageCircle} EndIcon={MessageCircle} />
-                    <h4 className="text-lg font-semibold mb-2">Customer Support</h4>
-                    <p className="text-zinc-400 text-sm">24/7 AI chatbots handling common customer queries</p>
+                    <h4 className={`text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Customer Support</h4>
+                    <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>24/7 AI chatbots handling common customer queries</p>
                   </motion.div>
 
                   {/* Scheduling */}
@@ -540,12 +616,16 @@ function App() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.15 }}
                     whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    className={`p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all ${
+                      theme === 'dark' 
+                        ? 'glass-container' 
+                        : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                    }`}
                     data-testid="use-case-3"
                   >
                     <WorkflowAnimation StartIcon={Mail} EndIcon={Calendar} />
-                    <h4 className="text-lg font-semibold mb-2">Scheduling & Calendar</h4>
-                    <p className="text-zinc-400 text-sm">Smart meeting coordination and appointment booking</p>
+                    <h4 className={`text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Scheduling & Calendar</h4>
+                    <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>Smart meeting coordination and appointment booking</p>
                   </motion.div>
 
                   {/* Content Generation */}
@@ -555,12 +635,16 @@ function App() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
                     whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    className={`p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all ${
+                      theme === 'dark' 
+                        ? 'glass-container' 
+                        : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                    }`}
                     data-testid="use-case-4"
                   >
                     <WorkflowAnimation StartIcon={MessageCircle} EndIcon={FileText} />
-                    <h4 className="text-lg font-semibold mb-2">Content Generation</h4>
-                    <p className="text-zinc-400 text-sm">Create marketing copy, reports, and documentation</p>
+                    <h4 className={`text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Content Generation</h4>
+                    <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>Create marketing copy, reports, and documentation</p>
                   </motion.div>
 
                   {/* Research & Analysis */}
@@ -570,19 +654,25 @@ function App() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.25 }}
                     whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    className={`p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all ${
+                      theme === 'dark' 
+                        ? 'glass-container' 
+                        : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                    }`}
                     data-testid="use-case-5"
                   >
                     <WorkflowAnimation StartIcon={Globe} EndIcon={FileText} />
-                    <h4 className="text-lg font-semibold mb-2">Research & Analysis</h4>
-                    <p className="text-zinc-400 text-sm">Automated market research and competitive analysis</p>
+                    <h4 className={`text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Research & Analysis</h4>
+                    <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>Automated market research and competitive analysis</p>
                   </motion.div>
                 </div>
               </div>
             </section>
 
             {/* Service Features Section */}
-            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+            <section id="features" className={`py-24 px-6 md:px-12 lg:px-24 border-t ${
+              theme === 'dark' ? 'border-white/5' : 'border-gray-200'
+            }`}>
               <div className="max-w-6xl mx-auto">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -613,8 +703,8 @@ function App() {
                     >
                       <div className="w-2 h-2 rounded-full bg-white mt-2 flex-shrink-0"></div>
                       <div>
-                        <h4 className="text-lg font-semibold mb-2">{feature.title}</h4>
-                        <p className="text-zinc-400 text-sm">{feature.desc}</p>
+                        <h4 className={`text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{feature.title}</h4>
+                        <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>{feature.desc}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -623,7 +713,9 @@ function App() {
             </section>
 
             {/* FAQs Section */}
-            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+            <section id="faq" className={`py-24 px-6 md:px-12 lg:px-24 border-t ${
+              theme === 'dark' ? 'border-white/5' : 'border-gray-200'
+            }`}>
               <div className="max-w-4xl mx-auto">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -673,7 +765,7 @@ function App() {
                             transition={{ duration: 0.3 }}
                             className="px-6 pb-6"
                           >
-                            <p className="text-zinc-400 text-sm">{faq.a}</p>
+                            <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>{faq.a}</p>
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -684,7 +776,9 @@ function App() {
             </section>
 
             {/* Contact Form Section */}
-            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+            <section id="contact" className={`py-24 px-6 md:px-12 lg:px-24 border-t ${
+              theme === 'dark' ? 'border-white/5' : 'border-gray-200'
+            }`}>
               <div className="max-w-2xl mx-auto">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}

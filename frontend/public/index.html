@@ -28,6 +28,15 @@
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
+        <script>
+            // Force scroll to top immediately
+            if (history.scrollRestoration) {
+                history.scrollRestoration = 'manual';
+            }
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        </script>
         <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

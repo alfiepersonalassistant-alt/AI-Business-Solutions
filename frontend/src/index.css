@@ -16,6 +16,16 @@ body {
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+html, body {
+    scroll-padding-top: 80px;
+}
+
+/* Prevent initial scroll restoration */
+html {
+    scroll-behavior: auto;
 }
 
 code {

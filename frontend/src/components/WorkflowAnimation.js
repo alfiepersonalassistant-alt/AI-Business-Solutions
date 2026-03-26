@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Cpu } from 'lucide-react';
 
 export default function WorkflowAnimation({ StartIcon, EndIcon }) {
   return (
@@ -24,27 +25,20 @@ export default function WorkflowAnimation({ StartIcon, EndIcon }) {
         />
       </div>
 
-      {/* AI Agent Node */}
+      {/* AI Agent Node - Using Cpu icon */}
       <div className="w-12 h-12 rounded-lg border border-purple-500/40 flex items-center justify-center bg-purple-500/10 hover:bg-purple-500/20 transition-all relative z-10">
         <motion.div
           animate={{
-            scale: [1, 1.1, 1]
+            scale: [1, 1.1, 1],
+            rotate: [0, 5, -5, 0]
           }}
           transition={{
-            duration: 2,
+            duration: 3,
             repeat: Infinity,
             ease: "easeInOut"
           }}
         >
-          <svg className="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="12" cy="8" r="3"/>
-            <path d="M12 11v4"/>
-            <circle cx="12" cy="18" r="2"/>
-            <path d="M8 14l-2 2"/>
-            <path d="M16 14l2 2"/>
-            <circle cx="6" cy="16" r="1"/>
-            <circle cx="18" cy="16" r="1"/>
-          </svg>
+          <Cpu className="w-6 h-6 text-purple-400" strokeWidth={1.5} />
         </motion.div>
       </div>
 
