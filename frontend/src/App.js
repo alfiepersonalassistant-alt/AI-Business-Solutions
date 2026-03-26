@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import '@/App.css';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sparkles, CheckCircle2, Mail, Database, MessageCircle, Calendar, FileText, Globe, Bot, Moon, Sun } from 'lucide-react';
+import { Send, Sparkles, CheckCircle2, Mail, Database, MessageCircle, Calendar, FileText, Globe, Bot, Moon, Sun, Lightbulb, Wrench, HeadphonesIcon, TrendingUp } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import ThreeBackground from '@/components/ThreeBackground';
 import WorkflowAnimation from '@/components/WorkflowAnimation';
@@ -39,6 +39,11 @@ function App() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  useEffect(() => {
+    // Set body class for theme
+    document.body.className = theme === 'dark' ? 'dark-theme' : 'light-theme';
+  }, [theme]);
 
   useEffect(() => {
     // Force scroll to top on page load
@@ -396,7 +401,11 @@ function App() {
                     <button
                       onClick={submitContact}
                       disabled={isLoading}
-                      className="glow-button w-full bg-white text-black font-medium py-3 px-6 rounded-lg mt-4 disabled:opacity-50"
+                      className={`glow-button w-full font-medium py-3 px-6 rounded-lg mt-4 disabled:opacity-50 ${
+                        theme === 'dark' 
+                          ? 'bg-white text-black hover:bg-gray-100' 
+                          : 'bg-purple-600 text-white hover:bg-purple-700'
+                      }`}
                       data-testid="submit-contact-button"
                     >
                       {isLoading ? 'Generating Recommendations...' : 'Get My Custom Plan'}
@@ -417,7 +426,11 @@ function App() {
                     <button
                       onClick={sendMessage}
                       disabled={isTyping || !inputValue.trim()}
-                      className="glow-button bg-white text-black p-3 rounded-lg disabled:opacity-50"
+                      className={`glow-button p-3 rounded-lg disabled:opacity-50 transition-all ${
+                        theme === 'dark' 
+                          ? 'bg-white text-black hover:bg-gray-100' 
+                          : 'bg-purple-600 text-white hover:bg-purple-700'
+                      }`}
                       data-testid="send-message-button"
                     >
                       <Send className="w-5 h-5" />
@@ -680,34 +693,53 @@ function App() {
                   viewport={{ once: true }}
                   className="text-center mb-16"
                 >
-                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <h3 className={`text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`} style={{ fontFamily: "Outfit, sans-serif" }}>
                     Why Choose Us
                   </h3>
-                  <p className="text-zinc-400">Comprehensive AI solutions designed for your success</p>
+                  <p className={theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}>Comprehensive AI solutions designed for your success</p>
                 </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                   {[
-                    { title: 'Custom AI Strategy', desc: 'Tailored solutions based on your specific business needs and goals' },
-                    { title: 'Expert Implementation', desc: 'Professional setup and integration with your existing systems' },
-                    { title: 'Ongoing Support', desc: '24/7 technical support and continuous optimization' },
-                    { title: 'Proven ROI', desc: 'Measurable time and cost savings within the first month' }
-                  ].map((feature, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      className="flex gap-4 items-start"
-                      data-testid={`feature-${idx}`}
-                    >
-                      <div className="w-2 h-2 rounded-full bg-white mt-2 flex-shrink-0"></div>
-                      <div>
-                        <h4 className={`text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{feature.title}</h4>
-                        <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>{feature.desc}</p>
-                      </div>
-                    </motion.div>
-                  ))}
+                    { icon: Lightbulb, title: 'Custom AI Strategy', desc: 'Tailored solutions based on your specific business needs and goals' },
+                    { icon: Wrench, title: 'Expert Implementation', desc: 'Professional setup and integration with your existing systems' },
+                    { icon: HeadphonesIcon, title: 'Ongoing Support', desc: '24/7 technical support and continuous optimization' },
+                    { icon: TrendingUp, title: 'Proven ROI', desc: 'Measurable time and cost savings within the first month' }
+                  ].map((feature, idx) => {
+                    const Icon = feature.icon;
+                    return (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.1 }}
+                        whileHover={{ y: -5 }}
+                        className={`p-6 rounded-xl hover:border-purple-500/20 transition-all ${
+                          theme === 'dark' 
+                            ? 'glass-container' 
+                            : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                        }`}
+                        data-testid={`feature-${idx}`}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className={`p-3 rounded-lg ${
+                            theme === 'dark' 
+                              ? 'bg-purple-500/10' 
+                              : 'bg-purple-100'
+                          }`}>
+                            <Icon className="w-6 h-6 text-purple-500" strokeWidth={1.5} />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className={`text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{feature.title}</h4>
+                            <p className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>{feature.desc}</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </div>
             </section>
@@ -840,7 +872,11 @@ function App() {
                       </div>
                       <button
                         type="submit"
-                        className="glow-button w-full bg-white text-black font-medium py-3 px-8 rounded-lg"
+                        className={`glow-button w-full font-medium py-3 px-8 rounded-lg ${
+                          theme === 'dark' 
+                            ? 'bg-white text-black hover:bg-gray-100' 
+                            : 'bg-purple-600 text-white hover:bg-purple-700'
+                        }`}
                         data-testid="contact-form-submit"
                       >
                         Send Message

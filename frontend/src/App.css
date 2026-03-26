@@ -155,8 +155,7 @@
 .input-field {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  color: inherit;
   padding: 12px 0;
   width: 100%;
   outline: none;
@@ -164,22 +163,52 @@
   font-family: 'Manrope', sans-serif;
 }
 
-.input-field:focus {
+.dark-theme .input-field {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.light-theme .input-field {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  color: #1F2937;
+}
+
+.dark-theme .input-field:focus {
   border-bottom-color: rgba(255, 255, 255, 0.8);
 }
 
-.input-field::placeholder {
+.light-theme .input-field:focus {
+  border-bottom-color: rgba(147, 51, 234, 0.8);
+}
+
+.dark-theme .input-field::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
 
+.light-theme .input-field::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
 textarea.input-field {
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid;
   border-radius: 8px;
   padding: 12px;
 }
 
-textarea.input-field:focus {
+.dark-theme textarea.input-field {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.light-theme textarea.input-field {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme textarea.input-field:focus {
   border-color: rgba(255, 255, 255, 0.8);
+}
+
+.light-theme textarea.input-field:focus {
+  border-color: rgba(147, 51, 234, 0.8);
 }
 
 .scroll-smooth {

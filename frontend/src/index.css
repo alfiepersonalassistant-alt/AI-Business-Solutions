@@ -9,9 +9,17 @@ body {
     font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+body.dark-theme {
     background: #050505;
     color: #FFFFFF;
-    overflow-x: hidden;
+}
+
+body.light-theme {
+    background: #F9FAFB;
+    color: #1F2937;
 }
 
 html {
