@@ -18,6 +18,9 @@ function App() {
   const [recommendations, setRecommendations] = useState(null);
   const messagesEndRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasUserSent, setHasUserSent] = useState(false);
+  const [generatingText, setGeneratingText] = useState('');
+  const [faqOpen, setFaqOpen] = useState(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,16 +49,28 @@ function App() {
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
+    setHasUserSent(true);
     setIsTyping(true);
+    
+    // Animated generating text
+    const texts = ['Working on it', 'Thinking', 'Generating response', 'Processing'];
+    let index = 0;
+    const interval = setInterval(() => {
+      setGeneratingText(texts[index % texts.length]);
+      index++;
+    }, 1500);
+    
+    setTimeout(() => clearInterval(interval), 500);
 
     try {
       const response = await axios.post(`${API}/chat`, {
         session_id: sessionId,
-        message: inputValue,
+        message: userMessage.content,
         conversation_history: messages
       });
 
       setIsTyping(false);
+      setGeneratingText('');
       
       const aiMessage = {
         role: 'assistant',
@@ -79,6 +94,7 @@ function App() {
     } catch (error) {
       console.error('Chat error:', error);
       setIsTyping(false);
+      setGeneratingText('');
       const errorMessage = {
         role: 'assistant',
         content: "I apologize, but I'm having trouble processing that. Could you try again?"
@@ -175,13 +191,20 @@ function App() {
             {currentStage !== 'complete' && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: 1,
+                  height: hasUserSent ? '95vh' : 'auto'
+                }}
+                transition={{ delay: 0.4, height: { duration: 0.5 } }}
                 className="glass-container rounded-2xl p-8 mb-8"
                 data-testid="chat-container"
               >
                 {/* Messages */}
-                <div className="h-[500px] overflow-y-auto mb-6 pr-2 space-y-4" data-testid="messages-container">
+                <div 
+                  className={`overflow-y-auto mb-6 pr-2 space-y-4 ${hasUserSent ? 'h-[calc(95vh-200px)]' : 'h-[300px]'}`}
+                  data-testid="messages-container"
+                >
                   <AnimatePresence>
                     {messages.map((msg, index) => (
                       <motion.div
@@ -204,7 +227,7 @@ function App() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="flex justify-start"
+                      className="flex justify-start items-center gap-3"
                       data-testid="typing-indicator"
                     >
                       <div className="message-bubble message-assistant">
@@ -214,6 +237,9 @@ function App() {
                           <div className="typing-dot"></div>
                         </div>
                       </div>
+                      {generatingText && (
+                        <span className="text-sm text-zinc-500 italic">{generatingText}...</span>
+                      )}
                     </motion.div>
                   )}
                   <div ref={messagesEndRef} />
@@ -326,6 +352,236 @@ function App() {
 
           </div>
         </div>
+
+        {/* Additional Sections - Only show when chat is not expanded */}
+        {!hasUserSent && currentStage !== 'complete' && (
+          <>
+            {/* How It Works Section */}
+            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+              <div className="max-w-6xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-center mb-16"
+                >
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    How It Works
+                  </h3>
+                  <p className="text-zinc-400">Simple, efficient, and tailored to your needs</p>
+                </motion.div>
+
+                <div className="grid md:grid-cols-3 gap-8">
+                  {[
+                    { step: '01', title: 'Tell Us About Your Business', desc: 'Share your industry, role, and daily challenges through our AI chat' },
+                    { step: '02', title: 'AI Analyzes Your Needs', desc: 'Our system identifies automation opportunities and efficiency gains' },
+                    { step: '03', title: 'Get Custom Solutions', desc: 'Receive tailored recommendations and pricing for implementation' }
+                  ].map((item, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="glass-container p-6 rounded-2xl hover:border-white/20 transition-all"
+                      data-testid={`how-it-works-step-${idx}`}
+                    >
+                      <div className="text-5xl font-light mb-4 text-white/20" style={{ fontFamily: "'Outfit', sans-serif" }}>{item.step}</div>
+                      <h4 className="text-xl font-medium mb-3">{item.title}</h4>
+                      <p className="text-zinc-400 text-sm">{item.desc}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Use Cases Section */}
+            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+              <div className="max-w-6xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-center mb-16"
+                >
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    Popular Use Cases
+                  </h3>
+                  <p className="text-zinc-400">See how businesses like yours benefit from AI automation</p>
+                </motion.div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[
+                    { icon: '📧', title: 'Email Automation', desc: 'Auto-sort, prioritize, and respond to emails using AI agents' },
+                    { icon: '📊', title: 'Data Processing', desc: 'Extract insights from reports and spreadsheets instantly' },
+                    { icon: '💬', title: 'Customer Support', desc: '24/7 AI chatbots handling common customer queries' },
+                    { icon: '📅', title: 'Scheduling & Calendar', desc: 'Smart meeting coordination and appointment booking' },
+                    { icon: '📝', title: 'Content Generation', desc: 'Create marketing copy, reports, and documentation' },
+                    { icon: '🔍', title: 'Research & Analysis', desc: 'Automated market research and competitive analysis' }
+                  ].map((useCase, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.05 }}
+                      whileHover={{ y: -5 }}
+                      className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
+                      data-testid={`use-case-${idx}`}
+                    >
+                      <div className="text-4xl mb-3">{useCase.icon}</div>
+                      <h4 className="text-lg font-semibold mb-2">{useCase.title}</h4>
+                      <p className="text-zinc-400 text-sm">{useCase.desc}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Service Features Section */}
+            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+              <div className="max-w-6xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-center mb-16"
+                >
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    Why Choose Us
+                  </h3>
+                  <p className="text-zinc-400">Comprehensive AI solutions designed for your success</p>
+                </motion.div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                  {[
+                    { title: 'Custom AI Strategy', desc: 'Tailored solutions based on your specific business needs and goals' },
+                    { title: 'Expert Implementation', desc: 'Professional setup and integration with your existing systems' },
+                    { title: 'Ongoing Support', desc: '24/7 technical support and continuous optimization' },
+                    { title: 'Proven ROI', desc: 'Measurable time and cost savings within the first month' }
+                  ].map((feature, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      className="flex gap-4 items-start"
+                      data-testid={`feature-${idx}`}
+                    >
+                      <div className="w-2 h-2 rounded-full bg-white mt-2 flex-shrink-0"></div>
+                      <div>
+                        <h4 className="text-lg font-semibold mb-2">{feature.title}</h4>
+                        <p className="text-zinc-400 text-sm">{feature.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* FAQs Section */}
+            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+              <div className="max-w-4xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-center mb-16"
+                >
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    Frequently Asked Questions
+                  </h3>
+                </motion.div>
+
+                <div className="space-y-4">
+                  {[
+                    { q: 'How long does implementation take?', a: 'Most implementations are completed within 2-4 weeks, depending on complexity and scope.' },
+                    { q: 'Do I need technical expertise?', a: 'Not at all. We handle all technical aspects and provide training for your team.' },
+                    { q: 'What if AI doesn\'t work for my business?', a: 'We offer a free consultation to assess fit before any commitment. Our success rate is 95%+.' },
+                    { q: 'How much can I save?', a: 'Average clients save 15-30 hours per week and reduce operational costs by 20-40%.' },
+                    { q: 'Is my data secure?', a: 'Yes. We use enterprise-grade encryption and comply with all data protection regulations.' }
+                  ].map((faq, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      className="glass-container rounded-xl overflow-hidden"
+                      data-testid={`faq-${idx}`}
+                    >
+                      <button
+                        onClick={() => setFaqOpen(faqOpen === idx ? null : idx)}
+                        className="w-full text-left p-6 flex justify-between items-center hover:bg-white/5 transition-colors"
+                      >
+                        <span className="font-medium">{faq.q}</span>
+                        <motion.span
+                          animate={{ rotate: faqOpen === idx ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          ▼
+                        </motion.span>
+                      </button>
+                      <AnimatePresence>
+                        {faqOpen === idx && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="px-6 pb-6"
+                          >
+                            <p className="text-zinc-400 text-sm">{faq.a}</p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Contact Form Section */}
+            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+              <div className="max-w-2xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-center mb-12"
+                >
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    Ready to Get Started?
+                  </h3>
+                  <p className="text-zinc-400">Use the chat above to discover your personalized AI solutions</p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  className="glass-container rounded-2xl p-8 text-center"
+                >
+                  <p className="text-lg mb-6">Or reach out directly:</p>
+                  <div className="space-y-3 text-zinc-300">
+                    <p className="flex items-center justify-center gap-2">
+                      <span>📧</span>
+                      <a href="mailto:iloveurbanace@gmail.com" className="hover:text-white transition-colors">
+                        iloveurbanace@gmail.com
+                      </a>
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    className="glow-button bg-white text-black font-medium py-3 px-8 rounded-lg mt-8"
+                    data-testid="scroll-to-chat-button"
+                  >
+                    Start Chat Now
+                  </button>
+                </motion.div>
+              </div>
+            </section>
+          </>
+        )}
 
         {/* Footer */}
         <footer className="text-center py-8 text-sm text-zinc-500">
