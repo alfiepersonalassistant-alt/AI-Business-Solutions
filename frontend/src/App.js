@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import '@/App.css';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Send, Sparkles, CheckCircle2, Mail, Database, MessageCircle, Calendar, FileText, Search, ArrowRight, Zap } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -21,16 +21,27 @@ function App() {
   const [hasUserSent, setHasUserSent] = useState(false);
   const [generatingText, setGeneratingText] = useState('');
   const [faqOpen, setFaqOpen] = useState(null);
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [contactSubmitted, setContactSubmitted] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  useLayoutEffect(() => {
+    // Force scroll to top before paint
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
 
   useEffect(() => {
+    // Force scroll to top on page load
+    window.history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    
     // Initial greeting
     const initialMessage = {
       role: 'assistant',
@@ -135,6 +146,28 @@ function App() {
       console.error('Lead submission error:', error);
       setIsLoading(false);
       alert('There was an error submitting your information. Please try again.');
+    }
+  };
+
+  const handleContactFormSubmit = async (e) => {
+    e.preventDefault();
+    if (!contactForm.name || !contactForm.email || !contactForm.message) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    try {
+      // Here you could add an API endpoint to handle contact form submissions
+      // For now, we'll just show success message
+      setContactSubmitted(true);
+      setContactForm({ name: '', email: '', message: '' });
+      
+      setTimeout(() => {
+        setContactSubmitted(false);
+      }, 5000);
+    } catch (error) {
+      console.error('Contact form error:', error);
+      alert('There was an error submitting your message. Please try again.');
     }
   };
 
@@ -411,29 +444,226 @@ function App() {
                 </motion.div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {[
-                    { icon: '📧', title: 'Email Automation', desc: 'Auto-sort, prioritize, and respond to emails using AI agents' },
-                    { icon: '📊', title: 'Data Processing', desc: 'Extract insights from reports and spreadsheets instantly' },
-                    { icon: '💬', title: 'Customer Support', desc: '24/7 AI chatbots handling common customer queries' },
-                    { icon: '📅', title: 'Scheduling & Calendar', desc: 'Smart meeting coordination and appointment booking' },
-                    { icon: '📝', title: 'Content Generation', desc: 'Create marketing copy, reports, and documentation' },
-                    { icon: '🔍', title: 'Research & Analysis', desc: 'Automated market research and competitive analysis' }
-                  ].map((useCase, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: idx * 0.05 }}
-                      whileHover={{ y: -5 }}
-                      className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
-                      data-testid={`use-case-${idx}`}
-                    >
-                      <div className="text-4xl mb-3">{useCase.icon}</div>
-                      <h4 className="text-lg font-semibold mb-2">{useCase.title}</h4>
-                      <p className="text-zinc-400 text-sm">{useCase.desc}</p>
-                    </motion.div>
-                  ))}
+                  {/* Email Automation */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -5 }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
+                    data-testid="use-case-0"
+                  >
+                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Mail className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Zap className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Mail className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-semibold mb-2">Email Automation</h4>
+                    <p className="text-zinc-400 text-sm">Auto-sort, prioritize, and respond to emails using AI agents</p>
+                  </motion.div>
+
+                  {/* Data Processing */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.05 }}
+                    whileHover={{ y: -5 }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
+                    data-testid="use-case-1"
+                  >
+                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Search className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Zap className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Database className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-semibold mb-2">Data Processing</h4>
+                    <p className="text-zinc-400 text-sm">Extract insights from reports and spreadsheets instantly</p>
+                  </motion.div>
+
+                  {/* Customer Support */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 }}
+                    whileHover={{ y: -5 }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
+                    data-testid="use-case-2"
+                  >
+                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Zap className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-semibold mb-2">Customer Support</h4>
+                    <p className="text-zinc-400 text-sm">24/7 AI chatbots handling common customer queries</p>
+                  </motion.div>
+
+                  {/* Scheduling */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.15 }}
+                    whileHover={{ y: -5 }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
+                    data-testid="use-case-3"
+                  >
+                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Mail className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Zap className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Calendar className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-semibold mb-2">Scheduling & Calendar</h4>
+                    <p className="text-zinc-400 text-sm">Smart meeting coordination and appointment booking</p>
+                  </motion.div>
+
+                  {/* Content Generation */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    whileHover={{ y: -5 }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
+                    data-testid="use-case-4"
+                  >
+                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Zap className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <FileText className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-semibold mb-2">Content Generation</h4>
+                    <p className="text-zinc-400 text-sm">Create marketing copy, reports, and documentation</p>
+                  </motion.div>
+
+                  {/* Research & Analysis */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.25 }}
+                    whileHover={{ y: -5 }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
+                    data-testid="use-case-5"
+                  >
+                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Search className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <Zap className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
+                      </motion.div>
+                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
+                        <FileText className="w-5 h-5" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-semibold mb-2">Research & Analysis</h4>
+                    <p className="text-zinc-400 text-sm">Automated market research and competitive analysis</p>
+                  </motion.div>
                 </div>
               </div>
             </section>
@@ -550,33 +780,77 @@ function App() {
                   className="text-center mb-12"
                 >
                   <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                    Ready to Get Started?
+                    Get In Touch
                   </h3>
-                  <p className="text-zinc-400">Use the chat above to discover your personalized AI solutions</p>
+                  <p className="text-zinc-400">Have questions? Send us a message or start a chat above</p>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  className="glass-container rounded-2xl p-8 text-center"
+                  className="glass-container rounded-2xl p-8"
                 >
-                  <p className="text-lg mb-6">Or reach out directly:</p>
-                  <div className="space-y-3 text-zinc-300">
-                    <p className="flex items-center justify-center gap-2">
-                      <span>📧</span>
-                      <a href="mailto:iloveurbanace@gmail.com" className="hover:text-white transition-colors">
-                        iloveurbanace@gmail.com
-                      </a>
-                    </p>
+                  {contactSubmitted ? (
+                    <div className="text-center py-8" data-testid="contact-success-message">
+                      <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-white" strokeWidth={1.5} />
+                      <h4 className="text-xl font-semibold mb-2">Message Sent!</h4>
+                      <p className="text-zinc-400">We'll get back to you as soon as possible.</p>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleContactFormSubmit} className="space-y-6" data-testid="contact-form-section">
+                      <div>
+                        <input
+                          type="text"
+                          placeholder="Your Name *"
+                          value={contactForm.name}
+                          onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                          className="input-field w-full"
+                          required
+                          data-testid="contact-form-name"
+                        />
+                      </div>
+                      <div>
+                        <input
+                          type="email"
+                          placeholder="Your Email *"
+                          value={contactForm.email}
+                          onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                          className="input-field w-full"
+                          required
+                          data-testid="contact-form-email"
+                        />
+                      </div>
+                      <div>
+                        <textarea
+                          placeholder="Your Message *"
+                          value={contactForm.message}
+                          onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                          className="input-field w-full min-h-[120px] resize-none"
+                          required
+                          data-testid="contact-form-message"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="glow-button w-full bg-white text-black font-medium py-3 px-8 rounded-lg"
+                        data-testid="contact-form-submit"
+                      >
+                        Send Message
+                      </button>
+                    </form>
+                  )}
+                  
+                  <div className="text-center mt-8 pt-8 border-t border-white/10">
+                    <p className="text-sm text-zinc-500 mb-4">Or start a conversation now</p>
+                    <button
+                      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                      className="text-white hover:text-zinc-300 transition-colors font-medium"
+                      data-testid="scroll-to-chat-button"
+                    >
+                      Start Chat →
+                    </button>
                   </div>
-                  <button
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="glow-button bg-white text-black font-medium py-3 px-8 rounded-lg mt-8"
-                    data-testid="scroll-to-chat-button"
-                  >
-                    Start Chat Now
-                  </button>
                 </motion.div>
               </div>
             </section>
