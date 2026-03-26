@@ -102,16 +102,15 @@ function App() {
       
       setMessages(prev => [...prev, aiMessage]);
       
-      // Check if we should move to contact stage (after ~5-6 exchanges)
-      if (messages.length >= 8 && currentStage === 'intro') {
+      // Check if AI is asking for contact details
+      const askingForContact = response.data.response.toLowerCase().includes('contact detail') || 
+                               response.data.response.toLowerCase().includes('contact information') ||
+                               (response.data.response.toLowerCase().includes('provide') && response.data.response.toLowerCase().includes('below'));
+      
+      if (askingForContact && currentStage === 'intro') {
         setTimeout(() => {
           setCurrentStage('contact');
-          const contactMessage = {
-            role: 'assistant',
-            content: "Great! I have a clear picture of your needs. Let me provide you with personalized recommendations and pricing. Please share your contact information below, and I'll send you a detailed implementation plan."
-          };
-          setMessages(prev => [...prev, contactMessage]);
-        }, 1500);
+        }, 1000);
       }
       
     } catch (error) {
@@ -773,14 +772,22 @@ function App() {
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
-                      className="glass-container rounded-xl overflow-hidden"
+                      className={`rounded-xl overflow-hidden ${
+                        theme === 'dark' 
+                          ? 'glass-container' 
+                          : 'bg-white border border-gray-200 shadow-sm'
+                      }`}
                       data-testid={`faq-${idx}`}
                     >
                       <button
                         onClick={() => setFaqOpen(faqOpen === idx ? null : idx)}
-                        className="w-full text-left p-6 flex justify-between items-center hover:bg-white/5 transition-colors"
+                        className={`w-full text-left p-6 flex justify-between items-center transition-colors ${
+                          theme === 'dark' 
+                            ? 'hover:bg-white/5' 
+                            : 'hover:bg-gray-50'
+                        }`}
                       >
-                        <span className="font-medium">{faq.q}</span>
+                        <span className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{faq.q}</span>
                         <motion.span
                           animate={{ rotate: faqOpen === idx ? 180 : 0 }}
                           transition={{ duration: 0.3 }}
@@ -818,23 +825,29 @@ function App() {
                   viewport={{ once: true }}
                   className="text-center mb-12"
                 >
-                  <h3 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <h3 className={`text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium mb-4 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`} style={{ fontFamily: "Outfit, sans-serif" }}>
                     Get In Touch
                   </h3>
-                  <p className="text-zinc-400">Have questions? Send us a message or start a chat above</p>
+                  <p className={theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}>Have questions? Send us a message or start a chat above</p>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  className="glass-container rounded-2xl p-8"
+                  className={`rounded-2xl p-8 ${
+                    theme === 'dark' 
+                      ? 'glass-container' 
+                      : 'bg-white border border-gray-200 shadow-sm'
+                  }`}
                 >
                   {contactSubmitted ? (
                     <div className="text-center py-8" data-testid="contact-success-message">
-                      <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-white" strokeWidth={1.5} />
-                      <h4 className="text-xl font-semibold mb-2">Message Sent!</h4>
-                      <p className="text-zinc-400">We'll get back to you as soon as possible.</p>
+                      <CheckCircle2 className={`w-16 h-16 mx-auto mb-4 ${theme === 'dark' ? 'text-white' : 'text-purple-600'}`} strokeWidth={1.5} />
+                      <h4 className={`text-xl font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Message Sent!</h4>
+                      <p className={theme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}>We'll get back to you as soon as possible.</p>
                     </div>
                   ) : (
                     <form onSubmit={handleContactFormSubmit} className="space-y-6" data-testid="contact-form-section">
