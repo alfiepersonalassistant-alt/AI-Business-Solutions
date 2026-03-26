@@ -185,8 +185,8 @@ function App() {
 
   return (
     <div className={`App ${theme}`}>
-      {/* 3D Animated Background for Hero */}
-      {!hasUserSent && <ThreeBackground />}
+      {/* 3D Animated Background for Hero - Only in dark mode */}
+      {!hasUserSent && theme === 'dark' && <ThreeBackground />}
       
       {/* Animated Background */}
       <div className="animated-bg">
