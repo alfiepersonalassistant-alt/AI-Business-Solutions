@@ -53,6 +53,10 @@ function App() {
     setMessages([initialMessage]);
   }, []);
 
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
 
@@ -194,7 +198,7 @@ function App() {
             theme === 'dark' 
               ? 'border-white/10 bg-black/20' 
               : 'border-gray-200 bg-white/20'
-          }}
+          }`}
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -490,37 +494,89 @@ function App() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    whileHover={{ y: -5 }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
+                    whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
                     data-testid="use-case-0"
                   >
-                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Mail className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Zap className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Mail className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                    </div>
+                    <WorkflowAnimation StartIcon={Mail} EndIcon={Mail} />
                     <h4 className="text-lg font-semibold mb-2">Email Automation</h4>
                     <p className="text-zinc-400 text-sm">Auto-sort, prioritize, and respond to emails using AI agents</p>
                   </motion.div>
 
+                  {/* Data Processing */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.05 }}
+                    whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    data-testid="use-case-1"
+                  >
+                    <WorkflowAnimation StartIcon={Globe} EndIcon={Database} />
+                    <h4 className="text-lg font-semibold mb-2">Data Processing</h4>
+                    <p className="text-zinc-400 text-sm">Extract insights from reports and spreadsheets instantly</p>
+                  </motion.div>
+
+                  {/* Customer Support */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 }}
+                    whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    data-testid="use-case-2"
+                  >
+                    <WorkflowAnimation StartIcon={MessageCircle} EndIcon={MessageCircle} />
+                    <h4 className="text-lg font-semibold mb-2">Customer Support</h4>
+                    <p className="text-zinc-400 text-sm">24/7 AI chatbots handling common customer queries</p>
+                  </motion.div>
+
+                  {/* Scheduling */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.15 }}
+                    whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    data-testid="use-case-3"
+                  >
+                    <WorkflowAnimation StartIcon={Mail} EndIcon={Calendar} />
+                    <h4 className="text-lg font-semibold mb-2">Scheduling & Calendar</h4>
+                    <p className="text-zinc-400 text-sm">Smart meeting coordination and appointment booking</p>
+                  </motion.div>
+
+                  {/* Content Generation */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    data-testid="use-case-4"
+                  >
+                    <WorkflowAnimation StartIcon={MessageCircle} EndIcon={FileText} />
+                    <h4 className="text-lg font-semibold mb-2">Content Generation</h4>
+                    <p className="text-zinc-400 text-sm">Create marketing copy, reports, and documentation</p>
+                  </motion.div>
+
+                  {/* Research & Analysis */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.25 }}
+                    whileHover={{ y: -5, borderColor: 'rgba(147, 51, 234, 0.3)' }}
+                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-purple-500/20 transition-all"
+                    data-testid="use-case-5"
+                  >
+                    <WorkflowAnimation StartIcon={Globe} EndIcon={FileText} />
+                    <h4 className="text-lg font-semibold mb-2">Research & Analysis</h4>
+                    <p className="text-zinc-400 text-sm">Automated market research and competitive analysis</p>
+                  </motion.div>
                 </div>
               </div>
             </section>
