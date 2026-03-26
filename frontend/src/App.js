@@ -2,8 +2,10 @@ import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import '@/App.css';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sparkles, CheckCircle2, Mail, Database, MessageCircle, Calendar, FileText, Search, ArrowRight, Zap } from 'lucide-react';
+import { Send, Sparkles, CheckCircle2, Mail, Database, MessageCircle, Calendar, FileText, Globe, Bot, Moon, Sun } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
+import ThreeBackground from '@/components/ThreeBackground';
+import WorkflowAnimation from '@/components/WorkflowAnimation';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -23,6 +25,7 @@ function App() {
   const [faqOpen, setFaqOpen] = useState(null);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [theme, setTheme] = useState('dark');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -172,7 +175,10 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${theme}`}>
+      {/* 3D Animated Background for Hero */}
+      {!hasUserSent && <ThreeBackground />}
+      
       {/* Animated Background */}
       <div className="animated-bg">
         <div className="grid-overlay"></div>
@@ -184,15 +190,34 @@ function App() {
         <motion.header 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-xl bg-black/20"
+          className={`fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl ${
+            theme === 'dark' 
+              ? 'border-white/10 bg-black/20' 
+              : 'border-gray-200 bg-white/20'
+          }}
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg hover:bg-purple-500/10 transition-all hover:scale-110"
+                data-testid="theme-toggle"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
+                ) : (
+                  <Moon className="w-5 h-5 text-purple-600" strokeWidth={1.5} />
+                )}
+              </button>
+            </div>
             <div className="flex items-center gap-2">
-              <Sparkles className="w-6 h-6" strokeWidth={1.5} />
-              <h1 className="text-xl font-light" style={{ fontFamily: "'Outfit', sans-serif" }}>
+              <Sparkles className="w-6 h-6 text-purple-500" strokeWidth={1.5} />
+              <h1 className={`text-xl font-light ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: "Outfit, sans-serif" }}>
                 AI Business Solutions
               </h1>
             </div>
+            <div className="w-14"></div>
           </div>
         </motion.header>
 
@@ -200,7 +225,6 @@ function App() {
         <div className="pt-24 pb-12 px-6 md:px-12 lg:px-24">
           <div className="max-w-5xl mx-auto">
             
-            {/* Hero Title */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -208,14 +232,18 @@ function App() {
               className="text-center mb-12"
             >
               <h2 
-                className="text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-light mb-4"
-                style={{ fontFamily: "'Outfit', sans-serif" }}
+                className={`text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-light mb-4 ${
+                  theme === 'dark' ? 'text-white' : 'text-gray-900'
+                }`}
+                style={{ fontFamily: "Outfit, sans-serif" }}
               >
                 Discover How AI Can{' '}
-                <span className="italic">Transform</span>{' '}
+                <span className="italic text-purple-500">Transform</span>{' '}
                 Your Business
               </h2>
-              <p className="text-base leading-relaxed text-zinc-300 max-w-2xl mx-auto">
+              <p className={`text-base leading-relaxed max-w-2xl mx-auto ${
+                theme === 'dark' ? 'text-zinc-300' : 'text-gray-600'
+              }`}>
                 Get personalized recommendations and pricing for AI automation solutions tailored to your business
               </p>
             </motion.div>
@@ -226,16 +254,24 @@ function App() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ 
                   opacity: 1, 
-                  scale: 1,
-                  height: hasUserSent ? '95vh' : 'auto'
+                  scale: 1
                 }}
-                transition={{ delay: 0.4, height: { duration: 0.5 } }}
-                className="glass-container rounded-2xl p-8 mb-8"
+                transition={{ delay: 0.4 }}
+                className={`rounded-2xl p-8 mb-8 ${
+                  theme === 'dark' 
+                    ? 'glass-container' 
+                    : 'bg-white/80 backdrop-blur-xl border border-gray-200 shadow-xl'
+                }`}
                 data-testid="chat-container"
               >
                 {/* Messages */}
                 <div 
-                  className={`overflow-y-auto mb-6 pr-2 space-y-4 ${hasUserSent ? 'h-[calc(95vh-200px)]' : 'h-[300px]'}`}
+                  className={`overflow-y-auto mb-6 pr-2 space-y-4`}
+                  style={{ 
+                    minHeight: '200px',
+                    maxHeight: hasUserSent ? '60vh' : '200px',
+                    height: 'auto'
+                  }}
                   data-testid="messages-container"
                 >
                   <AnimatePresence>
@@ -248,7 +284,11 @@ function App() {
                         className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         data-testid={`message-${msg.role}-${index}`}
                       >
-                        <div className={`message-bubble message-${msg.role}`}>
+                        <div className={`message-bubble ${
+                          msg.role === 'user' 
+                            ? `${theme === 'dark' ? 'message-user' : 'bg-purple-500 text-white'}` 
+                            : `${theme === 'dark' ? 'message-assistant' : 'bg-gray-100 text-gray-900 border border-gray-200'}`
+                        }`}>
                           {msg.content}
                         </div>
                       </motion.div>
@@ -386,11 +426,12 @@ function App() {
           </div>
         </div>
 
-        {/* Additional Sections - Only show when chat is not expanded */}
-        {!hasUserSent && currentStage !== 'complete' && (
-          <>
-            {/* How It Works Section */}
-            <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-white/5">
+        {/* Additional Sections - Always show */}
+        <>
+          {/* How It Works Section */}
+          <section className={`py-24 px-6 md:px-12 lg:px-24 border-t ${
+            theme === 'dark' ? 'border-white/5' : 'border-gray-200'
+          }`}>
               <div className="max-w-6xl mx-auto">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -480,190 +521,6 @@ function App() {
                     <p className="text-zinc-400 text-sm">Auto-sort, prioritize, and respond to emails using AI agents</p>
                   </motion.div>
 
-                  {/* Data Processing */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.05 }}
-                    whileHover={{ y: -5 }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
-                    data-testid="use-case-1"
-                  >
-                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Search className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Zap className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Database className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                    </div>
-                    <h4 className="text-lg font-semibold mb-2">Data Processing</h4>
-                    <p className="text-zinc-400 text-sm">Extract insights from reports and spreadsheets instantly</p>
-                  </motion.div>
-
-                  {/* Customer Support */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 }}
-                    whileHover={{ y: -5 }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
-                    data-testid="use-case-2"
-                  >
-                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Zap className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                    </div>
-                    <h4 className="text-lg font-semibold mb-2">Customer Support</h4>
-                    <p className="text-zinc-400 text-sm">24/7 AI chatbots handling common customer queries</p>
-                  </motion.div>
-
-                  {/* Scheduling */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.15 }}
-                    whileHover={{ y: -5 }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
-                    data-testid="use-case-3"
-                  >
-                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Mail className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Zap className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Calendar className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                    </div>
-                    <h4 className="text-lg font-semibold mb-2">Scheduling & Calendar</h4>
-                    <p className="text-zinc-400 text-sm">Smart meeting coordination and appointment booking</p>
-                  </motion.div>
-
-                  {/* Content Generation */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                    whileHover={{ y: -5 }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
-                    data-testid="use-case-4"
-                  >
-                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Zap className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <FileText className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                    </div>
-                    <h4 className="text-lg font-semibold mb-2">Content Generation</h4>
-                    <p className="text-zinc-400 text-sm">Create marketing copy, reports, and documentation</p>
-                  </motion.div>
-
-                  {/* Research & Analysis */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.25 }}
-                    whileHover={{ y: -5 }}
-                    className="glass-container p-6 rounded-xl cursor-pointer hover:border-white/20 transition-all"
-                    data-testid="use-case-5"
-                  >
-                    <div className="flex items-center justify-center gap-3 mb-4 h-16">
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Search className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <Zap className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                      >
-                        <ArrowRight className="w-4 h-4 text-zinc-500" strokeWidth={1.5} />
-                      </motion.div>
-                      <div className="w-10 h-10 rounded-lg border border-white/20 flex items-center justify-center bg-white/5">
-                        <FileText className="w-5 h-5" strokeWidth={1.5} />
-                      </div>
-                    </div>
-                    <h4 className="text-lg font-semibold mb-2">Research & Analysis</h4>
-                    <p className="text-zinc-400 text-sm">Automated market research and competitive analysis</p>
-                  </motion.div>
                 </div>
               </div>
             </section>
@@ -855,7 +712,6 @@ function App() {
               </div>
             </section>
           </>
-        )}
 
         {/* Footer */}
         <footer className="text-center py-8 text-sm text-zinc-500">
